@@ -17,6 +17,8 @@ public class Student {
     @Column(name = "age", nullable = false)
     private Integer age;
 
+    @Column(name = "gender", nullable = false, length = 10)
+    private String gender;   
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
@@ -25,9 +27,10 @@ public class Student {
     }
 
     // Constructor đầy đủ
-    public Student(String name, Integer age, String email) {
+    public Student(String name, Integer age, String gender, String email) {
         this.name = name;
         this.age = age;
+        this.gender = gender;
         this.email = email;
     }
 
@@ -54,6 +57,14 @@ public class Student {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getEmail() {

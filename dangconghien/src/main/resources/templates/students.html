@@ -27,9 +27,10 @@
 <table class="table table-bordered">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Họ tên</th>
+        <th>IDSV</th>
+        <th>Họ Và tên</th>
         <th>Tuổi</th>
+        <th>Giới tính</th> 
         <th>Email</th>
         <th>Hành động</th>
     </tr>
@@ -40,6 +41,7 @@
         <td th:text="${sv.id}"></td>
         <td th:text="${sv.name}"></td>
         <td th:text="${sv.age}"></td>
+        <td th:text="${sv.gender}"></td> 
         <td th:text="${sv.email}"></td>
         <td>
             <a class="btn btn-warning btn-sm"
@@ -57,4 +59,92 @@
 </table>
 
 </body>
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h2 {
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #2c3e50;
+        text-align: center;
+    }
+
+    .container {
+        max-width: 1000px;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    /* SEARCH BOX */
+    input.form-control {
+        border-radius: 8px;
+        padding: 10px 14px;
+    }
+
+    /* BUTTON */
+    .btn {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-warning {
+        background-color: #f6c23e;
+        border: none;
+        color: #000;
+    }
+
+    .btn-danger {
+        background-color: #e74a3b;
+        border: none;
+    }
+
+    /* TABLE */
+    table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    thead {
+        background: linear-gradient(135deg, #1cc88a, #17a673);
+        color: white;
+    }
+
+    th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    tbody tr:hover {
+        background-color: #ed1a8b;
+        transform: scale(1.005);
+    }
+
+    /* ACTION BUTTONS */
+    td a {
+        margin-right: 4px;
+    }
+</style>
+
 </html>
