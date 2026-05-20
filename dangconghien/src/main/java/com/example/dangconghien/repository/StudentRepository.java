@@ -13,21 +13,28 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-    // 1. GET ALL - SẮP XẾP ID TĂNG DẦN
+    // 1. Lấy tất cả sinh viên sắp xếp theo ID tăng dần
     List<Student> findAllByOrderByIdAsc();
 
-    // 2. TÌM KIẾM THEO TÊN (Ignore Case)
+    // 2. Tìm kiếm theo tên (không phân biệt hoa thường)
     List<Student> findByNameContainingIgnoreCase(String name);
 
-    // 3. KIỂM TRA EMAIL ĐÃ TỒN TẠI
+    // 3. Tìm kiếm theo tên hoặc email (không phân biệt hoa thường)
+    List<Student> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
+        String name, String email);
+
+    // 4. Kiểm tra email đã tồn tại
     boolean existsByEmail(String email);
 
-    // 4. JPQL tìm kiếm nâng cao
+    // 5. Kiểm tra email tồn tại nhưng không tính ID hiện tại
+    boolean existsByEmailAndIdNot(String email, Integer id);
+
+    // 6. Tìm kiếm nâng cao với JPQL
     @Query("SELECT s FROM Student s " +
            "WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Student> searchByName(@Param("keyword") String keyword);
 
-    // 5. Tìm kiếm + phân trang
+    // 7. Tìm kiếm có phân trang
     @Query("SELECT s FROM Student s WHERE s.name LIKE %:keyword%")
     Page<Student> searchWithPaging(@Param("keyword") String keyword,
                                    Pageable pageable);

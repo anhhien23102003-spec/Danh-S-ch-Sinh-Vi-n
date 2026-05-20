@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    // =========================
-    // 1. DANH SÁCH + TÌM KIẾM
-    // URL: /students
-    // =========================
+    /**
+     * Danh sách sinh viên với tìm kiếm
+     * URL: /students
+     */
     @GetMapping
     public String listStudents(
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -36,51 +37,36 @@ public class StudentController {
         model.addAttribute("students", students);
         model.addAttribute("keyword", keyword);
 
-        return "students"; // students.html
+        return "students";
     }
 
-    // =========================
-    // 2. FORM THÊM SINH VIÊN
-    // URL: /students/add
-    // =========================
+    /**
+     * Form thêm sinh viên mới
+     * URL: GET /students/add
+     */
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("student", new Student());
-        return "student-form"; // student-form.html
+        return "student-form";
     }
 
-    // =========================
-    // 3. LƯU SINH VIÊN
-    // (DÙNG CHUNG CHO ADD + UPDATE)
-    // =========================
-    @PostMapping("/save")
-    public String saveStudent(
-            @ModelAttribute("student") Student student,
-            Model model) {
-
-        // Chỉ kiểm tra email trùng khi THÊM MỚI
-        if (student.getId() == null &&
-                studentService.isEmailExists(student.getEmail())) {
-
-            model.addAttribute("error", "Email đã tồn tại!");
-            return "student-form";
-        }
-
-        studentService.saveStudent(student);
-        return "redirect:/students";
-    }
-
-    // =========================
-    // 4. FORM SỬA SINH VIÊN
-    // URL: /students/edit/{id}
-    // =========================
+    /**
+     * Form chỉnh sửa sinh viên
+     * URL: GET /students/edit/{id}
+     */
     @GetMapping("/edit/{id}")
     public String showEditForm(
             @PathVariable Integer id,
             Model model) {
 
+        // Kiểm tra ID hợp lệ
+        if (id == null || id <= 0) {
+            return "redirect:/students";
+        }
+
         Student student = studentService.getStudentById(id);
 
+        // Nếu sinh viên không tồn tại
         if (student == null) {
             return "redirect:/students";
         }
@@ -89,19 +75,88 @@ public class StudentController {
         return "student-form";
     }
 
-    // =========================
-    // 5. XÓA SINH VIÊN
-    // URL: /students/delete/{id}
-    // =========================
-    @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable Integer id) {
-        studentService.deleteStudent(id);
+    /**
+     * Lưu sinh viên (thêm mới hoặc cập nhật)
+     * URL: POST /students/save
+     */
+    @PostMapping("/save")
+    public String saveStudent(
+            @ModelAttribute("student") Student student,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        // Kiểm tra dữ liệu rỗng
+        if (student == null) {
+            model.addAttribute("error", "Dữ liệu sinh viên không hợp lệ");
+            return "student-form";
+        }
+
+        // Xác thực dữ liệu
+        String validationError = studentService.validateStudent(student);
+        if (validationError != null) {
+            model.addAttribute("error", validationError);
+            model.addAttribute("student", student);
+            return "student-form";
+        }
+
+        // Lưu sinh viên
+        String saveError = studentService.saveStudent(student);
+        
+        if (saveError != null) {
+            model.addAttribute("error", saveError);
+            model.addAttribute("student", student);
+            return "student-form";
+        }
+
+        // Thành công - redirect với thông báo
+        if (student.getId() == null) {
+            redirectAttributes.addFlashAttribute("success", "Thêm sinh viên thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("success", "Cập nhật sinh viên thành công!");
+        }
+
         return "redirect:/students";
     }
 
-    // =========================
-    // 6. REDIRECT students.html
-    // =========================
+    /**
+     * Xóa sinh viên
+     * URL: GET /students/delete/{id}
+     */
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(
+            @PathVariable Integer id,
+            RedirectAttributes redirectAttributes) {
+
+        // Kiểm tra ID hợp lệ
+        if (id == null || id <= 0) {
+            redirectAttributes.addFlashAttribute("error", "ID sinh viên không hợp lệ");
+            return "redirect:/students";
+        }
+
+        // Kiểm tra sinh viên có tồn tại không
+        Student student = studentService.getStudentById(id);
+        if (student == null) {
+            redirectAttributes.addFlashAttribute("error", "Sinh viên không tồn tại");
+            return "redirect:/students";
+        }
+
+        // Xóa sinh viên
+        boolean deleteSuccess = studentService.deleteStudent(id);
+        
+        if (deleteSuccess) {
+            redirectAttributes.addFlashAttribute("success", 
+                "Xóa sinh viên " + student.getName() + " thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", 
+                "Lỗi khi xóa sinh viên");
+        }
+
+        return "redirect:/students";
+    }
+
+    /**
+     * Redirect từ students.html đến /students
+     */
     @GetMapping("/students.html")
     public String redirectHtml() {
         return "redirect:/students";

@@ -2,149 +2,473 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Danh sách sinh viên</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Sinh viên</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .navbar-top {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #ffffff !important;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-title h2 {
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+            color: white;
+        }
+
+        .search-section {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-form input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-search {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-clear {
+            padding: 12px 25px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+
+        .content-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .table {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .table thead th {
+            border: none;
+            font-weight: 600;
+            padding: 16px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody td {
+            border: 1px solid #f0f0f0;
+            padding: 14px 16px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9ff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .student-id {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: left;
+        }
+
+        .student-email {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .gender-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .gender-male {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .gender-female {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(253, 160, 133, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #f5576c 0%, #ff9a56 100%);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(245, 87, 108, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .empty-state h4 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .stats-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .stat-card p {
+            margin: 10px 0 0 0;
+            color: #666;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-title h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn-add {
+                width: 100%;
+                text-align: center;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .table {
+                font-size: 0.85rem;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-edit, .btn-delete {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
-<body class="container mt-4">
-
-<h2>DANH SÁCH SINH VIÊN</h2>
-
-<a class="btn btn-primary mb-3"
-   th:href="@{/students/add}">
-    ➕ Thêm sinh viên
-</a>
-
-<form class="mb-3" method="get" th:action="@{/students}">
-    <input class="form-control"
-           type="text"
-           name="keyword"
-           placeholder="Tìm theo tên..."
-           th:value="${keyword}">
-</form>
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>IDSV</th>
-        <th>Họ Và tên</th>
-        <th>Tuổi</th>
-        <th>Giới tính</th> 
-        <th>Email</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="sv : ${students}">
-        <td th:text="${sv.id}"></td>
-        <td th:text="${sv.name}"></td>
-        <td th:text="${sv.age}"></td>
-        <td th:text="${sv.gender}"></td> 
-        <td th:text="${sv.email}"></td>
-        <td>
-            <a class="btn btn-warning btn-sm"
-               th:href="@{/students/edit/{id}(id=${sv.id})}">
-                Sửa
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar-top">
+        <div class="container-main">
+            <a class="navbar-brand" href="/students">
+                <i class="bi bi-person-badge"></i> Quản lý Sinh viên
             </a>
-            <a class="btn btn-danger btn-sm"
-               th:href="@{/students/delete/{id}(id=${sv.id})}"
-               onclick="return confirm('Bạn có chắc muốn xóa?')">
-                Xóa
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
+    </nav>
 
+    <!-- MAIN CONTENT -->
+    <div class="container-main">
+        <!-- SUCCESS/ERROR MESSAGES -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert" style="margin-bottom: 20px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.2);">
+            <i class="bi bi-check-circle"></i>
+            <strong>Thành công!</strong>
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-bottom: 20px; background: linear-gradient(135deg, #f5576c 0%, #ff9a56 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(245, 87, 108, 0.2);">
+            <i class="bi bi-exclamation-circle"></i>
+            <strong>Lỗi!</strong>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- HEADER SECTION -->
+        <div class="header-section">
+            <div class="header-title">
+                <h2>📚 Danh sách Sinh viên</h2>
+                <p class="header-subtitle">Quản lý thông tin sinh viên hiệu quả</p>
+            </div>
+            <a class="btn-add" th:href="@{/students/add}">
+                <i class="bi bi-plus-circle"></i> Thêm Sinh viên
+            </a>
+        </div>
+
+        <!-- STATS SECTION -->
+        <div class="stats-section" th:if="${students != null && students.size() > 0}">
+            <div class="stat-card">
+                <h3 th:text="${students.size()}"></h3>
+                <p>Tổng số sinh viên</p>
+            </div>
+        </div>
+
+        <!-- SEARCH SECTION -->
+        <div class="search-section">
+            <form class="search-form" method="get" th:action="@{/students}">
+                <input type="text"
+                       name="keyword"
+                       placeholder="🔍 Tìm theo tên, email..."
+                       th:value="${keyword}"
+                       autocomplete="off">
+                <button type="submit" class="btn-search">Tìm kiếm</button>
+                <a href="/students" class="btn-clear">Xóa lọc</a>
+            </form>
+        </div>
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <div th:if="${students != null && students.size() > 0}">
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="10%">ID</th>
+                                <th width="25%">Họ và Tên</th>
+                                <th width="10%">Tuổi</th>
+                                <th width="15%">Giới tính</th>
+                                <th width="25%">Email</th>
+                                <th width="15%">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sv : ${students}">
+                                <td class="student-id" th:text="${sv.id}"></td>
+                                <td class="student-name" th:text="${sv.name}"></td>
+                                <td th:text="${sv.age}"></td>
+                                <td>
+                                    <span class="gender-badge"
+                                          th:classappend="${sv.gender == 'Nam'} ? 'gender-male' : 'gender-female'"
+                                          th:text="${sv.gender}"></span>
+                                </td>
+                                <td class="student-email" th:text="${sv.email}"></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a class="btn-edit"
+                                           th:href="@{/students/edit/{id}(id=${sv.id})}">
+                                            <i class="bi bi-pencil-square"></i> Sửa
+                                        </a>
+                                        <a class="btn-delete"
+                                           th:href="@{/students/delete/{id}(id=${sv.id})}"
+                                           onclick="return confirm('Bạn có chắc muốn xóa sinh viên này?')">
+                                            <i class="bi bi-trash3"></i> Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div th:if="${students == null || students.size() == 0}" class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h4>Không có sinh viên</h4>
+                <p>Hãy thêm sinh viên đầu tiên của bạn</p>
+                <a class="btn-add" th:href="@{/students/add}" style="display: inline-block; margin-top: 15px;">
+                    <i class="bi bi-plus-circle"></i> Thêm Sinh viên
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<style>
-    body {
-        background-color: #f4f6f9;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    h2 {
-        font-weight: 700;
-        margin-bottom: 20px;
-        color: #2c3e50;
-        text-align: center;
-    }
-
-    .container {
-        max-width: 1000px;
-        background: #ffffff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    }
-
-    /* SEARCH BOX */
-    input.form-control {
-        border-radius: 8px;
-        padding: 10px 14px;
-    }
-
-    /* BUTTON */
-    .btn {
-        border-radius: 8px;
-        font-weight: 500;
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #4e73df, #224abe);
-        border: none;
-    }
-
-    .btn-primary:hover {
-        opacity: 0.9;
-    }
-
-    .btn-warning {
-        background-color: #f6c23e;
-        border: none;
-        color: #000;
-    }
-
-    .btn-danger {
-        background-color: #e74a3b;
-        border: none;
-    }
-
-    /* TABLE */
-    table {
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    thead {
-        background: linear-gradient(135deg, #1cc88a, #17a673);
-        color: white;
-    }
-
-    th {
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    td {
-        vertical-align: middle;
-    }
-
-    tbody tr {
-        transition: all 0.2s ease;
-    }
-
-    tbody tr:hover {
-        background-color: #ed1a8b;
-        transform: scale(1.005);
-    }
-
-    /* ACTION BUTTONS */
-    td a {
-        margin-right: 4px;
-    }
-</style>
-
 </html>
