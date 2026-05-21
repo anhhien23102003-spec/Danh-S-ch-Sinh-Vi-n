@@ -29,7 +29,10 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     // 5. Kiểm tra email tồn tại nhưng không tính ID hiện tại
     boolean existsByEmailAndIdNot(String email, Integer id);
 
-    // 6. Tìm kiếm nâng cao với JPQL
+    // 6. Lấy sinh viên có mã lớn nhất cùng năm để tạo mã tiếp theo
+    Student findTopByStudentCodeStartingWithOrderByStudentCodeDesc(String prefix);
+
+    // 7. Tìm kiếm nâng cao với JPQL
     @Query("SELECT s FROM Student s " +
            "WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Student> searchByName(@Param("keyword") String keyword);

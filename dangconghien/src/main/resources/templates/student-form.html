@@ -11,6 +11,8 @@
           rel="stylesheet">
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -18,29 +20,43 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 50%, #fbbf24 100%);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            background-attachment: fixed;
         }
 
         .form-container {
             background: #ffffff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 48px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
             width: 100%;
-            max-width: 500px;
-            animation: slideUp 0.4s ease;
+            max-width: 550px;
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #dc2626 0%, #fbbf24 100%);
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -50,121 +66,146 @@
 
         .form-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .form-header h2 {
             font-weight: 700;
-            color: #2c3e50;
-            font-size: 1.8rem;
-            margin: 0 0 10px 0;
+            color: #dc2626;
+            font-size: 2rem;
+            margin: 0 0 12px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .form-header i {
+            margin-right: 8px;
+            color: #f97316;
         }
 
         .form-header p {
-            color: #666;
+            color: #6b7280;
             font-size: 0.95rem;
             margin: 0;
+            font-weight: 500;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-label {
             font-weight: 600;
-            color: #34495e;
-            margin-bottom: 8px;
+            color: #dc2626;
+            margin-bottom: 10px;
             display: block;
             font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
 
         .form-label i {
-            color: #667eea;
-            margin-right: 5px;
+            color: #f97316;
+            margin-right: 6px;
         }
 
         .form-control,
         .form-select {
-            border-radius: 10px;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            background: #f9fafb;
         }
 
         .form-control:focus,
         .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #dc2626;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
             outline: none;
         }
 
         .form-control::placeholder {
-            color: #bbb;
+            color: #d1d5db;
         }
 
         .form-hint {
             font-size: 0.85rem;
-            color: #999;
-            margin-top: 5px;
+            color: #9ca3af;
+            margin-top: 6px;
         }
 
         .form-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 30px;
+            gap: 14px;
+            margin-top: 32px;
         }
 
         .btn-submit, .btn-cancel {
             flex: 1;
-            padding: 12px 20px;
+            padding: 14px 24px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-family: 'Poppins', sans-serif;
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
             color: white;
         }
 
         .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(220, 38, 38, 0.35);
             color: white;
             text-decoration: none;
         }
 
+        .btn-submit:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
         .btn-cancel {
-            background: #f0f0f0;
-            color: #333;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #374151;
+            border: 2px solid #d1d5db;
         }
 
         .btn-cancel:hover {
-            background: #e0e0e0;
+            background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+            color: #ffffff;
+            border-color: #9ca3af;
             text-decoration: none;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
         }
 
         .alert {
-            border-radius: 10px;
+            border-radius: 12px;
             border: none;
-            margin-bottom: 20px;
-            padding: 12px 16px;
+            margin-bottom: 24px;
+            padding: 14px 18px;
             animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-15px);
             }
             to {
                 opacity: 1;
@@ -175,34 +216,35 @@
         .alert-danger {
             background: linear-gradient(135deg, #f5576c 0%, #ff9a56 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.2);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.25);
         }
 
         .alert-success {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.2);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.25);
         }
 
         .back-link {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            color: #667eea;
+            gap: 6px;
+            color: #dc2626;
             text-decoration: none;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .back-link:hover {
-            color: #764ba2;
+            color: #f97316;
+            transform: translateX(-4px);
         }
 
         .gender-options {
             display: flex;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 16px;
+            margin-top: 12px;
         }
 
         .gender-option {
@@ -217,28 +259,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
             margin: 0;
+            background: #f9fafb;
+            gap: 6px;
+        }
+
+        .gender-option label:hover {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
         }
 
         .gender-option input[type="radio"]:checked + label {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
             color: white;
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+            transform: scale(1.05);
         }
 
         @media (max-width: 576px) {
             .form-container {
-                padding: 30px 20px;
+                padding: 32px 24px;
             }
 
             .form-header h2 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
 
             .form-actions {
@@ -269,6 +320,13 @@
             </h2>
             <p th:if="${student.id == null}">Nhập thông tin sinh viên mới</p>
             <p th:if="${student.id != null}">Chỉnh sửa thông tin sinh viên</p>
+        </div>
+
+        <div class="form-group" th:if="${student.studentCode != null}">
+            <label class="form-label">
+                <i class="bi bi-key-fill"></i> Mã Sinh viên
+            </label>
+            <input type="text" class="form-control" th:value="${student.studentCode}" readonly>
         </div>
 
         <!-- ERROR MESSAGE -->

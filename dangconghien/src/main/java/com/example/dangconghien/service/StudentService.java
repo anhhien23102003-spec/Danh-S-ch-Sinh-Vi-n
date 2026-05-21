@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -168,12 +169,39 @@ public class StudentService {
             return "Email này đã được sử dụng";
         }
 
+        // Nếu là sinh viên mới hoặc chưa có mã, tạo mã theo định dạng SV + năm + số thứ tự
+        if (student.getStudentCode() == null || student.getStudentCode().trim().isEmpty()) {
+            student.setStudentCode(generateStudentCode());
+        }
+
         try {
             repository.save(student);
             return null; // Thành công
         } catch (Exception e) {
             return "Lỗi khi lưu dữ liệu: " + e.getMessage();
         }
+    }
+
+    private String generateStudentCode() {
+        String year = String.valueOf(Year.now().getValue());
+        String prefix = "SV" + year;
+
+        Student lastStudent = repository.findTopByStudentCodeStartingWithOrderByStudentCodeDesc(prefix);
+        int nextNumber = 1;
+
+        if (lastStudent != null && lastStudent.getStudentCode() != null) {
+            String lastCode = lastStudent.getStudentCode();
+            if (lastCode.startsWith(prefix) && lastCode.length() > prefix.length()) {
+                String suffix = lastCode.substring(prefix.length());
+                try {
+                    nextNumber = Integer.parseInt(suffix) + 1;
+                } catch (NumberFormatException ignored) {
+                    nextNumber = 1;
+                }
+            }
+        }
+
+        return prefix + String.format("%03d", nextNumber);
     }
 
     /**

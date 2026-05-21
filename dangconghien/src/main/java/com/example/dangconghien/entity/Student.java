@@ -22,6 +22,9 @@ public class Student {
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
+    @Column(name = "student_code", nullable = true, unique = true, length = 20)
+    private String studentCode;
+
     // Constructor rỗng (BẮT BUỘC)
     public Student() {
     }
@@ -73,5 +76,13 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
     }
 }
